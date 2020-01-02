@@ -5,6 +5,7 @@
 
 trigger:
 - master
+- testplayground
 
 # no PR builds on this file
 pr: none
@@ -37,7 +38,7 @@ steps:
       testResultsFormat: NUnit
       testResultsFiles: '$(System.DefaultWorkingDirectory)/unit-test-report.xml'
       testRunTitle: Unit test results
-      failTaskOnFailedTests: false
+      failTaskOnFailedTests: true
     condition: succeededOrFailed()
 
   - script: |
@@ -56,7 +57,7 @@ steps:
   - task: DockerInstaller@0
     inputs:
       dockerVersion: '17.09.0-ce'
-      
+
   - task: DockerCompose@0
     displayName: 'Docker Build: gpitfuturesdevacr'
     inputs:
@@ -66,11 +67,11 @@ steps:
       dockerComposeFile: '**/docker-compose.yml'
       action: 'Build services'
 
-  - task: DockerCompose@0
-    displayName: 'Docker Push: gpitfuturesdevacr'
-    inputs:
-      containerregistrytype: 'Azure Container Registry'
-      azureSubscription: 'NHSAPP-BuyingCatalogue'
-      azureContainerRegistry: '{"loginServer":"gpitfuturesdevacr.azurecr.io", "id" : "/subscriptions/7b12a8a2-f06f-456f-b6f9-aa2d92e0b2ec/resourceGroups/gpitfutures-dev-rg-acr/providers/Microsoft.ContainerRegistry/registries/gpitfuturesdevacr"}'
-      dockerComposeFile: '**/docker-compose.yml'
-      action: 'Push services'
+#  - task: DockerCompose@0
+#    displayName: 'Docker Push: gpitfuturesdevacr'
+#    inputs:
+#      containerregistrytype: 'Azure Container Registry'
+#      azureSubscription: 'NHSAPP-BuyingCatalogue'
+#      azureContainerRegistry: '{"loginServer":"gpitfuturesdevacr.azurecr.io", "id" : "/subscriptions/7b12a8a2-f06f-456f-b6f9-aa2d92e0b2ec/resourceGroups/gpitfutures-dev-rg-acr/providers/Microsoft.ContainerRegistry/registries/gpitfuturesdevacr"}'
+#      dockerComposeFile: '**/docker-compose.yml'
+#      action: 'Push services'
