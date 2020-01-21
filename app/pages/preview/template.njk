@@ -1,4 +1,5 @@
 {% extends 'includes/layout.njk' %}
+{% from 'components/button/macro.njk' import button %}
 {% from 'sections/view-solution-description/macro.njk' import viewSolutionDescription %}
 {% from 'sections/view-features/macro.njk' import viewFeatures %}
 {% from 'sections/view-client-application-types/macro.njk' import viewClientApplicationTypes %}
@@ -21,6 +22,33 @@
     {{ viewSolutionContactDetails({
       section: sections['contact-details']
     }) }}
+
+    {% set urlAzBinding %}http://localhost:3002/download/azBinding/{{ id }}{%- endset -%}
+
+    <div data-test-id="preview-roadmap-button-azBinding">
+      {{ button({
+        "text": "Download Roadmap (AZ, Binding)",
+        "classes": "nhsuk-button--secondary",
+        "href": urlAzBinding
+      }) }}
+
+    {% set urlAzSdk %}http://localhost:3002/download/azSdk/{{ id }}{%- endset -%}
+
+    <div data-test-id="preview-roadmap-button-azSdk">
+      {{ button({
+        "text": "Download Roadmap (AZ, SDK)",
+        "classes": "nhsuk-button--secondary",
+        "href": urlAzSdk
+      }) }}
+
+      {% set urlLocalApi %}http://localhost:3002/download/localApi/{{ id }}{%- endset -%}
+
+      <div data-test-id="preview-roadmap-button-localApi">
+      {{ button({
+        "text": "Download Roadmap (Local API, SDK)",
+        "classes": "nhsuk-button--secondary",
+        "href": urlLocalApi
+      }) }}
 
   </div>
 </div>
