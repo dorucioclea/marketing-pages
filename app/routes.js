@@ -7,9 +7,6 @@ import { getSectionPageContext, getSectionPageErrorContext, postSection } from '
 import { getPreviewPageContext } from './pages/preview/controller';
 import logger from './logger';
 import { errorHandler } from './pages/error/errorHandler';
-import fs from 'fs';
-
- const https = require('https');
 
 const router = express.Router();
 
@@ -18,33 +15,6 @@ router.get('/healthcheck', async (req, res) => {
 
   res.send('Marketing pages is Running!!!');
 });
-
-
-// router.get('/download/azSdk/:solutionId', async (req, res) => {
-//   const { solutionId } = req.params;
-
-//   logger.info('Downloading roadmap using AZ Function and SDK');
-
-//   const accessKey = 'IZRYVGZcONeync/PQt9ck3u4SM/CoGbqocl3ak2CpUUKhLSDRGAuHQ==';
-
-//   // const azSdkEndpoint = `https://func-streamingspike.azurewebsites.net/api/downloadBlob/binding/spike/${solutionId}.pdf?code=${accessKey}`;
-//   const azSdkEndpoint = `https://func-streamingspike.azurewebsites.net/api/downloadBlob/binding/spike/${solutionId}.pdf`;
-
-//   let config = {
-//     method: 'get',
-//     headers: {
-//       "x-functions-key": accessKey,
-//     },
-//     responseType: 'stream'
-//   }
-
-//   logger.info(`api called: [GET] ${azSdkEndpoint}`);
-
-//   // const response = await axios.get(azSdkEndpoint, { responseType: 'stream' });
-//   const response = await axios.get(azSdkEndpoint, config);
-
-//   response.data.pipe(res);
-// });
 
 router.get('/download/azBinding/:solutionId', async (req, res) => {
   logger.info('Downloading roadmap using AZ Function (with binding)');
