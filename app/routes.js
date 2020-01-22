@@ -20,9 +20,9 @@ router.get('/download/azBinding/:solutionId', async (req, res) => {
   logger.info('Downloading roadmap using AZ Function (with binding)');
 
   const { solutionId } = req.params;
-  const accessKey = 'wO9RfaZeIHTo27ae84MALT2NP67O1ETkGAQvD0P0aiiAdWAFFQ/zaA==';
-  const azSdkEndpoint = `https://func-streamingspike.azurewebsites.net/api/downloadBlob/sdk/spike/`;
-  const response = await downloadRoadmap(solutionId, azSdkEndpoint, accessKey);
+  const accessKey = '{Here}';
+  const azBindingEndpoint = 'https://func-streamingspike.azurewebsites.net/api/downloadBlob/binding/spike/';
+  const response = await downloadRoadmap(solutionId, azBindingEndpoint, accessKey);
 
   response.data.pipe(res);
 });
@@ -31,8 +31,8 @@ router.get('/download/azSdk/:solutionId', async (req, res) => {
   logger.info('Downloading roadmap using AZ Function (with SDK)');
 
   const { solutionId } = req.params;
-  const accessKey = 'IZRYVGZcONeync/PQt9ck3u4SM/CoGbqocl3ak2CpUUKhLSDRGAuHQ==';
-  const azSdkEndpoint = `https://func-streamingspike.azurewebsites.net/api/downloadBlob/binding/spike/`;
+  const accessKey = '{Here}';
+  const azSdkEndpoint = 'https://func-streamingspike.azurewebsites.net/api/downloadBlob/sdk/spike/';
   const response = await downloadRoadmap(solutionId, azSdkEndpoint, accessKey);
 
   response.data.pipe(res);
