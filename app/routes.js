@@ -1,14 +1,14 @@
 import express from 'express';
 import axios from 'axios';
 
-import blobStorage from '@azure/storage-blob';
-
 import { getMarketingPageDashboardContext, postSubmitForModeration } from './pages/dashboard/controller';
 import { getSubDashboardPageContext } from './pages/dashboard/subDashboards/controller';
 import { getSectionPageContext, getSectionPageErrorContext, postSection } from './pages/section/controller';
 import { getPreviewPageContext } from './pages/preview/controller';
 import logger from './logger';
 import { errorHandler } from './pages/error/errorHandler';
+
+const blobStorage = require('@azure/storage-blob');
 
 const router = express.Router();
 
@@ -34,13 +34,13 @@ async function downloadRoadmap(solutionId, url, accessKey) {
   return axios.get(azSdkEndpoint, config);
 }
 
-const appName = '{AppNameHere}';
+const appName = 'func-streamingspike';
 
 router.get('/download/azBinding/:solutionId', async (req, res) => {
   logger.info('Downloading roadmap using AZ Function (with binding)');
 
   const { solutionId } = req.params;
-  const accessKey = '{FunctionKeyHere}';
+  const accessKey = '13Zbo5vydAU5VaXt0Xfpawg3xS9h2614uZq2MGic3ncGfn3GBBJa7w==';
   const azBindingEndpoint = `https://${appName}.azurewebsites.net/api/downloadBlob/binding/spike/`;
 
   const response = await downloadRoadmap(solutionId, azBindingEndpoint, accessKey);
@@ -52,7 +52,7 @@ router.get('/download/azSdk/:solutionId', async (req, res) => {
   logger.info('Downloading roadmap using AZ Function (with SDK)');
 
   const { solutionId } = req.params;
-  const accessKey = '{FunctionKeyHere}';
+  const accessKey = '04MRvMYdSugTVMA5jMdmL8W1xDLYU1FYaR48H3PaUy/7IxFL5GpHHg==';
   const azSdkEndpoint = `https://${appName}.azurewebsites.net/api/downloadBlob/sdk/spike/`;
 
   const response = await downloadRoadmap(solutionId, azSdkEndpoint, accessKey);
@@ -78,8 +78,8 @@ router.get('/download/node/:solutionId', async (req, res) => {
 
   const { solutionId } = req.params;
 
-  const accountName = '{StorageAccountNameHere}';
-  const accountKey = '{StorageAccountKeyHere}';
+  const accountName = 'ststreamingspike001';
+  const accountKey = '6HCECUIDEXY1wdfHto6hqUcGyjzdxBAI9RJCwhKl4ToMdm9JDC4r1h+ctDMeev7RWmZJmjmsNLiMihJ7ARQN8A==';
   const endpoint = `https://${accountName}.blob.core.windows.net`;
 
   const credential = new blobStorage.StorageSharedKeyCredential(
