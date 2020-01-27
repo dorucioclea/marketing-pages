@@ -50,6 +50,15 @@
         "href": urlLocalApi
       }) }}
 
+      {% set urlNode %}http://localhost:3002/download/node/{{ id }}{%- endset -%}
+
+      <div data-test-id="preview-roadmap-button-node">
+      {{ button({
+        "text": "Download Roadmap (Node, SDK)",
+        "classes": "nhsuk-button--secondary",
+        "href": urlNode
+      }) }}
+
   </div>
 </div>
 {% endblock %}

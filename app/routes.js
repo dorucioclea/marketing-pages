@@ -1,6 +1,8 @@
 import express from 'express';
 import axios from 'axios';
 
+const blobStorage = require("@azure/storage-blob");
+
 import { getMarketingPageDashboardContext, postSubmitForModeration } from './pages/dashboard/controller';
 import { getSubDashboardPageContext } from './pages/dashboard/subDashboards/controller';
 import { getSectionPageContext, getSectionPageErrorContext, postSection } from './pages/section/controller';
@@ -16,12 +18,15 @@ router.get('/healthcheck', async (req, res) => {
   res.send('Marketing pages is Running!!!');
 });
 
+const appName = '{AppNameHere}';
+
 router.get('/download/azBinding/:solutionId', async (req, res) => {
   logger.info('Downloading roadmap using AZ Function (with binding)');
 
   const { solutionId } = req.params;
-  const accessKey = '{Here}';
-  const azBindingEndpoint = 'https://func-streamingspike.azurewebsites.net/api/downloadBlob/binding/spike/';
+  const accessKey = '{FunctionKeyHere}';
+  const azBindingEndpoint = `https://${appName}.azurewebsites.net/api/downloadBlob/binding/spike/`;
+
   const response = await downloadRoadmap(solutionId, azBindingEndpoint, accessKey);
 
   response.data.pipe(res);
@@ -31,8 +36,9 @@ router.get('/download/azSdk/:solutionId', async (req, res) => {
   logger.info('Downloading roadmap using AZ Function (with SDK)');
 
   const { solutionId } = req.params;
-  const accessKey = '{Here}';
-  const azSdkEndpoint = 'https://func-streamingspike.azurewebsites.net/api/downloadBlob/sdk/spike/';
+  const accessKey = '{FunctionKeyHere}';
+  const azSdkEndpoint = `https://${appName}.azurewebsites.net/api/downloadBlob/sdk/spike/`;
+
   const response = await downloadRoadmap(solutionId, azSdkEndpoint, accessKey);
 
   response.data.pipe(res);
@@ -49,6 +55,33 @@ router.get('/download/localApi/:solutionId', async (req, res) => {
   const response = await axios.get(endpoint, { responseType: 'stream' });
 
   response.data.pipe(res);
+});
+
+router.get('/download/node/:solutionId', async (req, res) => {
+  logger.info('Downloading roadmap using node only (with SDK)');
+
+  const { solutionId } = req.params;
+
+  const accountName = '{StorageAccountNameHere}';
+  const accountKey = '{StorageAccountKeyHere}';
+  const endpoint = `https://${accountName}.blob.core.windows.net`;
+
+  const credential = new blobStorage.StorageSharedKeyCredential(
+    accountName,
+    accountKey);
+
+  const blobServiceClient = new blobStorage.BlobServiceClient(
+    endpoint,
+    credential);
+
+  const containerClient = blobServiceClient.getContainerClient('spike');
+  const blobClient = containerClient.getBlobClient(`${solutionId}.pdf`);
+
+  logger.info(`API called: [GET] ${endpoint}`);
+
+  const download = await blobClient.download();
+
+  download.readableStreamBody.pipe(res);
 });
 
 async function downloadRoadmap(solutionId, url, accessKey)
