@@ -1,7 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 
-const blobStorage = require("@azure/storage-blob");
+import blobStorage from '@azure/storage-blob';
 
 import { getMarketingPageDashboardContext, postSubmitForModeration } from './pages/dashboard/controller';
 import { getSubDashboardPageContext } from './pages/dashboard/subDashboards/controller';
@@ -17,6 +17,22 @@ router.get('/healthcheck', async (req, res) => {
 
   res.send('Marketing pages is Running!!!');
 });
+
+async function downloadRoadmap(solutionId, url, accessKey) {
+  const azSdkEndpoint = `${url}/${solutionId}.pdf`;
+
+  const config = {
+    method: 'get',
+    headers: {
+      'x-functions-key': accessKey,
+    },
+    responseType: 'stream',
+  };
+
+  logger.info(`API called: [GET] ${azSdkEndpoint}`);
+
+  return axios.get(azSdkEndpoint, config);
+}
 
 const appName = '{AppNameHere}';
 
@@ -68,11 +84,13 @@ router.get('/download/node/:solutionId', async (req, res) => {
 
   const credential = new blobStorage.StorageSharedKeyCredential(
     accountName,
-    accountKey);
+    accountKey,
+  );
 
   const blobServiceClient = new blobStorage.BlobServiceClient(
     endpoint,
-    credential);
+    credential,
+  );
 
   const containerClient = blobServiceClient.getContainerClient('spike');
   const blobClient = containerClient.getBlobClient(`${solutionId}.pdf`);
@@ -83,23 +101,6 @@ router.get('/download/node/:solutionId', async (req, res) => {
 
   download.readableStreamBody.pipe(res);
 });
-
-async function downloadRoadmap(solutionId, url, accessKey)
-{
-  const azSdkEndpoint = `${url}/${solutionId}.pdf`;
-
-  let config = {
-    method: 'get',
-    headers: {
-      "x-functions-key": accessKey,
-    },
-    responseType: 'stream'
-  }
-
-  logger.info(`API called: [GET] ${azSdkEndpoint}`);
-
-  return await axios.get(azSdkEndpoint, config);
-}
 
 router.get('/solution/:solutionId', async (req, res, next) => {
   const { solutionId } = req.params;
